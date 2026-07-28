@@ -1,5 +1,5 @@
-import { Button } from "./ui/button";
-import { Link } from "react-router-dom";
+import { FrammerModal } from "./frammerModal";
+import { BuyerModal } from "./buyerModal";
 
 export function Cta() {
   return (
@@ -83,50 +83,12 @@ export function Cta() {
             gap-4
             "
           >
-            <Link to="" className="w-full sm:w-auto">
-              <Button
-                className="
-                w-full
-                sm:w-auto
-                px-10
-                py-6
-                bg-white
-                text-green-600
-                font-semibold
-                hover:bg-gray-100
-                transition-all
-                duration-300
-                cursor-pointer
-                hover:scale-105
-                hover:shadow-lg
-                "
-              >
-                Sou Agricultor
-              </Button>
-            </Link>
-
-            <Link to="" className="w-full sm:w-auto">
-              <Button
-                className="
-                w-full
-                sm:w-auto
-                px-10
-                py-6
-                bg-transparent
-                border
-                border-white
-                text-white
-                font-semibold
-                hover:bg-white/10
-                transition-all
-                duration-300
-                cursor-pointer
-                hover:scale-105
-                "
-              >
-                Sou Comprador
-              </Button>
-            </Link>
+            <div className="w-full sm:w-auto  ">
+              <FrammerModal />
+            </div>
+            <div className="w-full sm:w-auto  ">
+              <BuyerModal />
+            </div>
           </div>
         </div>
       </div>
