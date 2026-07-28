@@ -29,7 +29,8 @@ export function Hero() {
           left-6
           md:left-12
           xl:left-20
-         lg: top-1/3
+          top-1/2
+    lg:top-1/3
           -translate-y-1/2
           text-white
           max-w-xl
