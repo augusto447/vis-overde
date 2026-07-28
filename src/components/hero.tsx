@@ -132,7 +132,8 @@ export function Hero() {
         absolute
         right-48
         top-[45%]
-       
+        hidden
+        lg:block
         -translate-y-1/2
         "
       >
