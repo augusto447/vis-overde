@@ -1,5 +1,5 @@
 import MainImage from "@/assets/MainImage.png";
-import { Link } from "react-router-dom";
+
 import { Button } from "./ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight02Icon } from "@hugeicons/core-free-icons";
@@ -80,7 +80,7 @@ export function Hero() {
           gap-4
           "
         >
-          <Link to="#cta">
+          <a href="#cta">
             <Button
               className="
               w-full
@@ -94,14 +94,15 @@ export function Hero() {
               hover:bg-green-600
               hover:scale-105
               transition-all
+              cursor-pointer
               "
             >
               EXPERIMENTAR AGORA
               <HugeiconsIcon size={20} icon={ArrowRight02Icon} />
             </Button>
-          </Link>
+          </a>
 
-          <Link to="#sobre">
+          <a href="#sobre">
             <Button
               className="
               w-full
@@ -116,11 +117,12 @@ export function Hero() {
               text-white
               hover:bg-white/10
               transition-all
+              cursor-pointer
               "
             >
               SABER MAIS
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
 
@@ -130,8 +132,7 @@ export function Hero() {
         absolute
         right-48
         top-[45%]
-        hidden
-        lg:block
+       
         -translate-y-1/2
         "
       >
