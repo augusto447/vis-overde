@@ -33,54 +33,54 @@ export function About() {
     <section
       id="sobre"
       className="
-      py-16
-      sm:py-20
-      lg:py-24
-      px-5
-      sm:px-8
-      lg:px-20
-      "
+        py-10
+        sm:py-20
+        lg:py-24
+        px-5
+        sm:px-8
+        lg:px-20
+        "
     >
       {/* Header */}
       <div
         className="
-        text-center
-        mb-12
-        lg:mb-16
-        "
+          text-center
+          mb-12
+          lg:mb-16
+          "
       >
         <span
           className="
-          text-green-500
-          font-semibold
-          text-sm
-          sm:text-base
-          "
+            text-green-500
+            font-semibold
+            text-sm
+            sm:text-base
+            "
         >
           🌱 Agricultura inteligente
         </span>
 
         <h2
           className="
-          mt-3
-          text-3xl
-          sm:text-4xl
-          font-bold
-          "
+            mt-3
+            text-3xl
+            sm:text-4xl
+            font-bold
+            "
         >
           Sobre a <span className="text-green-500">Visão Verde</span>
         </h2>
 
         <p
           className="
-          mt-5
-          max-w-3xl
-          mx-auto
-          text-gray-600
-          leading-7
-          text-sm
-          sm:text-base
-          "
+            mt-5
+            max-w-3xl
+            mx-auto
+            text-gray-600
+            leading-7
+            text-sm
+            sm:text-base
+            "
         >
           Uma plataforma inteligente que combina agricultura e inteligência
           artificial para analisar solo, culturas e produtos agrícolas, ajudando
@@ -92,36 +92,36 @@ export function About() {
       {/* Conteúdo */}
       <div
         className="
-        grid
-        grid-cols-1
-        lg:grid-cols-2
-        gap-10
-        lg:gap-14
-        items-center
-        "
+          grid
+          grid-cols-1
+          lg:grid-cols-2
+          gap-10
+          lg:gap-14
+          items-center
+          "
       >
         {/* Imagem */}
         <div
           className="
-          overflow-hidden
-          rounded-3xl
-          h-[320px]
-          sm:h-[420px]
-          lg:h-[560px]
-          bg-gray-100
-          "
+            overflow-hidden
+            rounded-3xl
+            h-[320px]
+            sm:h-[420px]
+            lg:h-[560px]
+          
+            "
         >
           <img
             src={AboutImage}
             alt="Agricultura inteligente"
             className="
-            w-full
-            h-full
-            object-cover
-            transition-transform
-            duration-500
-            hover:scale-105
-            "
+              w-full
+              h-full
+              object-cover
+              transition-transform
+              duration-500
+              hover:scale-105
+              "
           />
         </div>
 
@@ -129,23 +129,23 @@ export function About() {
         <div>
           <h3
             className="
-            text-2xl
-            sm:text-3xl
-            font-bold
-            leading-tight
-            "
+              text-2xl
+              sm:text-3xl
+              font-bold
+              leading-tight
+              "
           >
             Do solo ao consumidor final
           </h3>
 
           <p
             className="
-            mt-5
-            text-gray-600
-            leading-7
-            text-sm
-            sm:text-base
-            "
+              mt-2
+              text-gray-600
+              leading-7
+              text-sm
+              sm:text-base
+              "
           >
             A Visão Verde utiliza inteligência artificial para transformar dados
             agrícolas em informações úteis. A plataforma ajuda agricultores a
@@ -156,48 +156,48 @@ export function About() {
           {/* Cards */}
           <div
             className="
-            mt-8
-            grid
-            gap-5
-            "
+              mt-2
+              grid
+              gap-5
+              "
           >
             {features.map((feature) => (
               <Card
                 key={feature.title}
                 className="
-                  p-4
-                  sm:p-5
-                  rounded-2xl
-                  border
-                  bg-white
-                  transition-all
-                  duration-300
-                  hover:-translate-y-2
-                  hover:border-green-300
-                  hover:shadow-xl
-                  "
+                    p-2
+                    sm:p-5
+                    rounded-2xl
+                    border
+                    bg-white
+                    transition-all
+                    duration-300
+                    hover:-translate-y-2
+                    hover:border-green-300
+                    hover:shadow-xl
+                    "
               >
                 <div
                   className="
-                    flex
-                    items-start
-                    gap-4
-                    "
+                      flex
+                      items-start
+                      gap-4
+                      "
                 >
                   {/* Icon */}
                   <div
                     className="
-                      flex
-                      items-center
-                      justify-center
-                      w-12
-                      h-12
-                      sm:w-14
-                      sm:h-14
-                      rounded-xl
-                      bg-green-50
-                      shrink-0
-                      "
+                        flex
+                        items-center
+                        justify-center
+                        w-10
+                        h-10
+                        sm:w-14
+                        sm:h-14
+                        rounded-xl
+                        bg-green-50
+                        shrink-0
+                        "
                   >
                     <HugeiconsIcon
                       icon={feature.icon}
@@ -210,21 +210,21 @@ export function About() {
                   <div>
                     <h4
                       className="
-                        font-bold
-                        text-base
-                        sm:text-lg
-                        "
+                          font-bold
+                          text-base
+                          sm:text-lg
+                          "
                     >
                       {feature.title}
                     </h4>
 
                     <p
                       className="
-                        mt-2
-                        text-sm
-                        text-gray-600
-                        leading-6
-                        "
+                          mt-2
+                          text-sm
+                          text-gray-600
+                          leading-6
+                          "
                     >
                       {feature.description}
                     </p>

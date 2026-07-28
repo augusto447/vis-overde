@@ -9,7 +9,7 @@ export function Cta() {
       px-5
       sm:px-8
       lg:px-20
-      py-20
+      py-6
       "
     >
       <div

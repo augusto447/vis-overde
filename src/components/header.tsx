@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logo01.jpeg";
 import { Menu, X } from "lucide-react";
 
 export function Header() {
@@ -18,12 +18,12 @@ export function Header() {
           />
 
           <div>
-            <h1 className="text-xl md:text-3xl font-bold">
+            <h1 className=" md:text-2xl font-bold">
               VISÃO <span className="text-green-500">VERDE</span>
             </h1>
 
             <p className="text-xs md:text-sm text-gray-500">
-              Inteligência que cultiva resultados
+              Inteligência que faz agricultura crescer
             </p>
           </div>
         </div>
@@ -60,6 +60,7 @@ export function Header() {
               hover:bg-green-600
               transition-all
               hover:scale-105
+              cursor-pointer
               "
             >
               Experimentar

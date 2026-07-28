@@ -29,7 +29,7 @@ export function Testimonials() {
       px-5
       sm:px-8
       lg:px-20
-      py-20
+      py-8
       bg-gray-50
       "
     >
