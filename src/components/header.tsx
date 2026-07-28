@@ -92,7 +92,7 @@ export function Header() {
 
           <a href="#sobre">Sobre</a>
 
-          <a href="#beneficios">Benefícios</a>
+          <a href="#beneficio">Benefícios</a>
 
           <a href="#impacto">Impacto</a>
 
