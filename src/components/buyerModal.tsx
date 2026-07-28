@@ -63,17 +63,18 @@ export function BuyerModal() {
 
       <DialogContent
         className="
-        w-[95%]
-        sm:max-w-md
+        w-[92%]
+        max-w-md
         rounded-2xl
+        p-5
         "
       >
         <DialogHeader>
-          <DialogTitle>Analisar produto agrícola</DialogTitle>
+          <DialogTitle>Analisar produto agrícola 🌱</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Imagem */}
+          {/* Upload imagem */}
 
           <div>
             <label className="text-sm font-medium">Imagem do produto</label>
@@ -86,7 +87,6 @@ export function BuyerModal() {
               items-center
               justify-center
               h-32
-              sm:h-36
               border-2
               border-dashed
               border-gray-300
@@ -95,6 +95,7 @@ export function BuyerModal() {
               overflow-hidden
               hover:border-green-500
               hover:bg-green-50
+              hover:scale-[1.02]
               transition
               "
             >
@@ -103,20 +104,46 @@ export function BuyerModal() {
                   src={URL.createObjectURL(image)}
                   alt="Produto"
                   className="
-                    w-full
-                    h-full
-                    object-cover
-                    "
+                  w-full
+                  h-full
+                  object-cover
+                  "
                 />
               ) : (
-                <div className="text-center">
+                <div
+                  className="
+                  flex
+                  flex-col
+                  items-center
+                  justify-center
+                  text-center
+                  "
+                >
                   <HugeiconsIcon
                     icon={ImageUpload01Icon}
-                    size={35}
+                    size={42}
                     color="#22c55e"
                   />
 
-                  <p className="text-sm text-gray-600">Carregar imagem</p>
+                  <p
+                    className="
+                    mt-2
+                    text-sm
+                    font-medium
+                    text-gray-700
+                    "
+                  >
+                    Carregar imagem
+                  </p>
+
+                  <span
+                    className="
+                    text-xs
+                    text-gray-400
+                    "
+                  >
+                    PNG, JPG ou JPEG
+                  </span>
                 </div>
               )}
             </label>
@@ -154,13 +181,12 @@ export function BuyerModal() {
             />
           </div>
 
-          {/* Quantidade + Local */}
+          {/* Quantidade e Local */}
 
           <div
             className="
             grid
-            grid-cols-1
-            sm:grid-cols-2
+            grid-cols-2
             gap-3
             "
           >
@@ -184,7 +210,7 @@ export function BuyerModal() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Localização</label>
+              <label className="text-sm font-medium">Local</label>
 
               <input
                 value={location}
@@ -226,6 +252,8 @@ export function BuyerModal() {
               "
             />
           </div>
+
+          {/* Botão */}
 
           <Button
             onClick={handleAnalyze}
