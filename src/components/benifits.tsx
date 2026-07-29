@@ -6,6 +6,7 @@ import {
   ShoppingCart01Icon,
 } from "@hugeicons/core-free-icons";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { SectionReveal } from "./sectionReveals";
 
 const benefits = [
   {
@@ -36,7 +37,7 @@ const benefits = [
 
 export function Benefits() {
   return (
-    <section id="beneficio" className="px-6 md:px-20 py-8">
+    <SectionReveal id="beneficio" className="px-6 md:px-20 py-8">
       <div className="text-center mb-14">
         <h2 className="text-4xl font-bold">
           Benefícios da <span className="text-green-500">Visão Verde</span>
@@ -118,6 +119,6 @@ export function Benefits() {
           </Card>
         ))}
       </div>
-    </section>
+    </SectionReveal>
   );
 }

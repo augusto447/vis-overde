@@ -5,6 +5,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
+import { SectionReveal } from "./sectionReveals";
 
 const steps = [
   {
@@ -29,7 +30,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <section id="como-funciona" className="py-4 px-5 sm:px-10 lg:px-20">
+    <SectionReveal id="como-funciona" className="py-4 px-5 sm:px-10 lg:px-20">
       <div className="text-center mb-12 lg:mb-16">
         <h2
           className="
@@ -137,6 +138,6 @@ export function HowItWorks() {
           </Card>
         ))}
       </div>
-    </section>
+    </SectionReveal>
   );
 }

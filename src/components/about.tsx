@@ -6,6 +6,7 @@ import {
   ChartIncreaseIcon,
   Plant04Icon,
 } from "@hugeicons/core-free-icons";
+import { SectionReveal } from "./sectionReveals";
 
 const features = [
   {
@@ -30,7 +31,7 @@ const features = [
 
 export function About() {
   return (
-    <section
+    <SectionReveal
       id="sobre"
       className="
         py-10
@@ -41,7 +42,6 @@ export function About() {
         lg:px-20
         "
     >
-      {/* Header */}
       <div
         className="
           text-center
@@ -89,7 +89,6 @@ export function About() {
         </p>
       </div>
 
-      {/* Conteúdo */}
       <div
         className="
           grid
@@ -100,7 +99,6 @@ export function About() {
           items-center
           "
       >
-        {/* Imagem */}
         <div
           className="
             overflow-hidden
@@ -125,7 +123,6 @@ export function About() {
           />
         </div>
 
-        {/* Texto */}
         <div>
           <h3
             className="
@@ -235,6 +232,6 @@ export function About() {
           </div>
         </div>
       </div>
-    </section>
+    </SectionReveal>
   );
 }

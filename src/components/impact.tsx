@@ -7,6 +7,7 @@ import {
   Plant04Icon,
 } from "@hugeicons/core-free-icons";
 import { Card, CardTitle } from "./ui/card";
+import { SectionReveal } from "./sectionReveals";
 
 const impacts = [
   {
@@ -39,7 +40,7 @@ export function Impact() {
   return (
     <>
       {/* Impacto */}
-      <section id="impacto" className="px-5 sm:px-8 lg:px-20 py-8">
+      <SectionReveal id="impacto" className="px-5 sm:px-8 lg:px-20 py-8">
         <div className="text-center mb-14">
           <h2 className="text-3xl sm:text-4xl font-bold">
             O impacto da <span className="text-green-500">Visão Verde</span>
@@ -116,10 +117,10 @@ export function Impact() {
             </Card>
           ))}
         </div>
-      </section>
+      </SectionReveal>
 
       {/* Público alvo */}
-      <section
+      <SectionReveal
         className="
         px-5
         sm:px-8
@@ -248,7 +249,7 @@ export function Impact() {
             </ul>
           </Card>
         </div>
-      </section>
+      </SectionReveal>
     </>
   );
 }

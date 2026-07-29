@@ -1,3 +1,4 @@
+import { SectionReveal } from "./sectionReveals";
 import { Card, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 const testimonials = [
@@ -23,7 +24,7 @@ const testimonials = [
 
 export function Testimonials() {
   return (
-    <section
+    <SectionReveal
       id="testemunhos"
       className="
       px-5
@@ -152,6 +153,6 @@ export function Testimonials() {
           </Card>
         ))}
       </div>
-    </section>
+    </SectionReveal>
   );
 }
