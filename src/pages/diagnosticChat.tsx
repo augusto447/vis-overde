@@ -1,240 +1,200 @@
-import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ArrowLeft, LoaderCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Send } from "lucide-react";
+import {
+  analyzeBuyer,
+  analyzeFarmer,
+  continueAnalysisConversation,
+  type ChatMessage,
+} from "@/lib/api";
 
-const farmerResponse = [
-  "🔍 Estou a analisar a imagem da cultura...",
-  "🌱 Cultura identificada: Café Arábica",
-  "⚠️ Problema encontrado: possível ferrugem-do-cafeeiro",
-  "📊 Confiança da análise: 94%",
-  "💡 Recomendação: remover folhas afetadas e aplicar tratamento adequado.",
-];
+type DiagnosticState = {
+  type: "farmer" | "buyer";
+  image: File;
+  culture?: string;
+  description?: string;
+  productName?: string;
+  quantity?: string;
+  location?: string;
+  objective?: string;
+};
+
+function cleanMarkdown(text: string): string {
+  return text
+    .replace(/```(?:markdown|md|text)?\s*/gi, "")
+    .replace(/```/g, "")
+    .replace(/^\s{0,3}#{1,6}\s*/gm, "")
+    .replace(/\*\*(.*?)\*\*/gs, "$1")
+    .replace(/__(.*?)__/gs, "$1")
+    .replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, "$1")
+    .replace(/(?<!_)_([^_\n]+)_(?!_)/g, "$1")
+    .replace(/^\s*[-*+]\s+/gm, "• ")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+function formatResult(result: unknown): string {
+  if (typeof result === "string") return cleanMarkdown(result);
+  if (!result || typeof result !== "object") return "A API não retornou detalhes da análise.";
+
+  return cleanMarkdown(Object.entries(result as Record<string, unknown>)
+    .map(([key, value]) => {
+      const label = key.replace(/([A-Z])/g, " $1").replace(/^./, (char) => char.toUpperCase());
+      const text = typeof value === "string" ? value : JSON.stringify(value, null, 2);
+      return `${label}: ${text}`;
+    })
+    .join("\n"));
+}
 
 export function DiagnosticChat() {
   const location = useLocation();
   const navigate = useNavigate();
-
-  const {
-    type,
-    image,
-    description,
-    productName,
-    quantity,
-    location: buyerLocation,
-  } = location.state || {};
-
-  const buyerResponse = [
-    "🔍 Estou a analisar o produto enviado...",
-    `🌱 Produto identificado: ${productName || "Produto agrícola"}`,
-    "✅ Qualidade visual analisada com sucesso.",
-    "📊 Estado do produto: Boa qualidade",
-    `📦 Quantidade solicitada: ${quantity || "Não informado"}`,
-    `📍 Local de entrega: ${buyerLocation || "Não informado"}`,
-    "💡 Recomendação: produto adequado para compra.",
-  ];
-
-  const [messages, setMessages] = useState<any[]>([]);
+  const state = location.state as DiagnosticState | null;
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [message, setMessage] = useState("");
+  const [result, setResult] = useState<unknown>(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
-    const response = type === "buyer" ? buyerResponse : farmerResponse;
+    if (!state?.image || !state.type) {
+      navigate("/", { replace: true });
+      return;
+    }
 
-    setMessages([
-      {
-        sender: "user",
-        text:
-          description ||
-          (type === "buyer"
-            ? `Quero comprar ${productName}`
-            : "Enviei uma imagem da minha cultura."),
-      },
-    ]);
+    const currentState = state;
+    let active = true;
 
-    let index = 0;
+    async function runAnalysis() {
+      try {
+        const response = currentState.type === "farmer"
+          ? await analyzeFarmer({
+              culture: currentState.culture || "",
+              description: currentState.description || "",
+              image: currentState.image,
+            })
+          : await analyzeBuyer({
+              product: currentState.productName || "",
+              quantity: currentState.quantity || "",
+              location: currentState.location || "",
+              objective: currentState.objective || "",
+              image: currentState.image,
+            });
 
-    const interval = setInterval(() => {
-      if (index < response.length) {
-        setMessages((prev) => [
-          ...prev,
-          {
-            sender: "ai",
-            text: response[index],
-          },
+        if (!active) return;
+
+        const analysisResult = response.result ?? response.data;
+        const initialUserMessage = currentState.type === "farmer"
+          ? `${currentState.culture}: ${currentState.description}`
+          : `${currentState.productName}, ${currentState.quantity}, entrega em ${currentState.location}. ${currentState.objective}`;
+
+        setResult(analysisResult);
+        setMessages([
+          { role: "user", content: initialUserMessage },
+          { role: "assistant", content: formatResult(analysisResult) },
         ]);
-
-        index++;
-      } else {
-        clearInterval(interval);
+      } catch (analysisError) {
+        if (active) {
+          setError(analysisError instanceof Error ? analysisError.message : "Erro ao realizar a análise.");
+        }
+      } finally {
+        if (active) setLoading(false);
       }
-    }, 1200);
+    }
 
-    return () => clearInterval(interval);
-  }, []);
+    void runAnalysis();
 
-  function sendMessage() {
-    if (!message.trim()) return;
+    return () => {
+      active = false;
+    };
+  }, [navigate, state]);
 
-    setMessages((prev) => [
-      ...prev,
-      {
-        sender: "user",
-        text: message,
-      },
-      {
-        sender: "ai",
-        text: "🤖 Estou a analisar a sua pergunta...",
-      },
-    ]);
+  if (!state?.image) return null;
 
+  const currentState = state;
+
+  async function sendMessage() {
+    const content = message.trim();
+    if (!content || sending || loading) return;
+
+    const nextMessages: ChatMessage[] = [...messages, { role: "user", content }];
+    setMessages(nextMessages);
     setMessage("");
+    setError("");
+    setSending(true);
+
+    try {
+      const response = await continueAnalysisConversation(currentState.type, result, nextMessages);
+      const answer = formatResult(response.result ?? response.data);
+      setMessages((currentMessages) => [...currentMessages, { role: "assistant", content: answer }]);
+    } catch (chatError) {
+      setError(chatError instanceof Error ? chatError.message : "Erro ao enviar a mensagem.");
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
-    <main className="h-screen bg-gray-50 flex flex-col">
-      {/* HEADER */}
-      <header
-        className="
-        bg-green-500
-        text-white
-        px-4
-        sm:px-6
-        py-4
-        flex
-        items-center
-        gap-3
-        shadow
-        "
-      >
-        <button
-          onClick={() => navigate("/")}
-          className="
-          cursor-pointer
-          hover:scale-110
-          transition
-          "
-        >
+    <main className="min-h-screen bg-gray-50 flex flex-col">
+      <header className="bg-green-500 text-white px-4 sm:px-6 py-4 flex items-center gap-3 shadow">
+        <button onClick={() => navigate("/")} aria-label="Voltar para o início" className="cursor-pointer hover:scale-110 transition">
           <ArrowLeft size={22} />
         </button>
-
-        <h1
-          className="
-          text-lg
-          sm:text-xl
-          font-bold
-          "
-        >
-          Visão Verde AI 🌱
-        </h1>
+        <h1 className="text-lg sm:text-xl font-bold">Conversa com a IA</h1>
       </header>
 
-      {/* CHAT */}
-      <section
-        className="
-        flex-1
-        overflow-y-auto
-        px-4
-        sm:px-8
-        py-5
-        space-y-4
-        "
-      >
-        {/* IMAGEM */}
-        {image && (
-          <div>
-            <img
-              src={URL.createObjectURL(image)}
-              alt="Produto"
-              className="
-              w-40
-              sm:w-52
-              rounded-2xl
-              shadow
-              "
-            />
+      <section className="flex-1 overflow-y-auto px-4 sm:px-8 py-5 space-y-4 max-w-5xl w-full mx-auto">
+        <img src={URL.createObjectURL(state.image)} alt="Imagem enviada para análise" className="w-40 sm:w-52 rounded-2xl shadow" />
+
+        {loading && (
+          <div className="w-fit p-4 rounded-2xl shadow-sm bg-white text-gray-600 flex items-center gap-2">
+            <LoaderCircle className="animate-spin" size={18} />
+            A analisar a imagem...
           </div>
         )}
 
-        {/* MENSAGENS */}
-        {messages.map((msg, index) => (
+        {messages.map((chatMessage) => (
           <div
-            key={index}
-            className={`
-            w-fit
-            max-w-[85%]
-            sm:max-w-xl
-            p-3
-            sm:p-4
-            rounded-2xl
-            shadow-sm
-            text-sm
-            sm:text-base
-
-            ${
-              msg.sender === "ai"
+            key={`${chatMessage.role}-${chatMessage.content}`}
+            className={`w-fit max-w-[85%] sm:max-w-2xl p-3 sm:p-4 rounded-2xl shadow-sm text-sm sm:text-base whitespace-pre-wrap ${
+              chatMessage.role === "assistant"
                 ? "bg-white text-gray-800"
                 : "bg-green-500 text-white ml-auto"
-            }
-            `}
+            }`}
           >
-            {msg.text}
+            {chatMessage.content}
           </div>
         ))}
+
+        {error && <p className="text-red-600 bg-white rounded-xl p-3">{error}</p>}
       </section>
 
-      {/* INPUT */}
-      <footer
-        className="
-        border-t
-        bg-white
-        p-3
-        sm:p-4
-        "
-      >
-        <div
-          className="
-          flex
-          gap-2
-          max-w-5xl
-          mx-auto
-          "
-        >
+      <footer className="border-t bg-white p-3 sm:p-4">
+        <div className="flex gap-2 max-w-5xl mx-auto">
           <input
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                sendMessage();
+            onChange={(event) => setMessage(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                void sendMessage();
               }
             }}
-            placeholder="Digite a sua dúvida..."
-            className="
-            flex-1
-            min-w-0
-            border
-            rounded-xl
-            px-3
-            sm:px-4
-            py-3
-            text-sm
-            outline-none
-            focus:ring-2
-            focus:ring-green-500
-            "
+            disabled={loading || sending}
+            placeholder="Digite sua dúvida sobre a análise..."
+            className="flex-1 min-w-0 border rounded-xl px-3 sm:px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-100"
           />
-
           <Button
-            onClick={sendMessage}
-            className="
-            bg-green-500
-            hover:bg-green-600
-            cursor-pointer
-            rounded-xl
-            px-3
-            sm:px-5
-            "
+            onClick={() => void sendMessage()}
+            disabled={loading || sending || !message.trim()}
+            aria-label="Enviar mensagem"
+            className="bg-green-500 hover:bg-green-600 cursor-pointer rounded-xl px-3 sm:px-5 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            <Send size={18} />
+            {sending ? <LoaderCircle className="animate-spin" size={18} /> : <Send size={18} />}
           </Button>
         </div>
       </footer>

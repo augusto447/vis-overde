@@ -1,5 +1,15 @@
 # React + TypeScript + Vite
 
+## Configuração da API
+
+Crie um arquivo `.env` na raiz do frontend com a URL do backend:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+As análises são enviadas para `/api/analysis/farmer` e `/api/analysis/buyer` como `multipart/form-data`.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

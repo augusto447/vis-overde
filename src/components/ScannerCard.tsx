@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 
-const READOUT_LINES = [
-  { text: "> a analisar imagem…", highlight: false },
-  { text: "cultura: café arábica", highlight: false },
-  { text: "sintoma: manchas foliares", highlight: false },
-  { text: "diagnóstico: ferrugem-do-cafeeiro", highlight: true },
-  { text: "confiança: 94%", highlight: true },
+const readoutLines = [
+  { text: "> pronto para analisar", highlight: false },
+  { text: "envie uma imagem da sua cultura", highlight: false },
+  { text: "a IA identificará os sinais visíveis", highlight: true },
 ];
 
 export function ScanCard() {
@@ -18,7 +16,7 @@ export function ScanCard() {
     function tick() {
       if (i === 0) setVisibleLines(0);
 
-      if (i < READOUT_LINES.length) {
+      if (i < readoutLines.length) {
         i++;
         setVisibleLines(i);
         timeout = setTimeout(tick, 800);
@@ -71,7 +69,7 @@ export function ScanCard() {
 
         <span className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-green-500" />
-          ao vivo
+          <span>ao vivo</span>
         </span>
       </div>
 
@@ -142,8 +140,8 @@ export function ScanCard() {
           text-white/90
         "
       >
-        {READOUT_LINES.slice(0, visibleLines).map((line, idx) => (
-          <div key={idx} className={line.highlight ? "text-amber-400" : ""}>
+        {readoutLines.slice(0, visibleLines).map((line) => (
+          <div key={line.text} className={line.highlight ? "text-amber-400" : ""}>
             {line.text}
           </div>
         ))}

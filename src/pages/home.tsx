@@ -19,7 +19,6 @@ export function Home() {
         <Hero />
         <About />
         <HowItWorks />
-
         <Benefits />
         <Impact />
         <Testimonials />

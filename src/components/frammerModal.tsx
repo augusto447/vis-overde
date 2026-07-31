@@ -15,6 +15,7 @@ export function FrammerModal() {
   const navigate = useNavigate();
 
   const [image, setImage] = useState<File | null>(null);
+  const [culture, setCulture] = useState("");
   const [description, setDescription] = useState("");
 
   function handleImage(e: React.ChangeEvent<HTMLInputElement>) {
@@ -26,10 +27,13 @@ export function FrammerModal() {
   }
 
   function handleAnalyze() {
+    if (!image || !culture.trim() || !description.trim()) return;
+
     navigate("/diagnostico", {
       state: {
         type: "farmer",
         image,
+        culture,
         description,
       },
     });
@@ -82,6 +86,7 @@ export function FrammerModal() {
 
           <div>
             <label
+              htmlFor="farmer-image"
               className="
               text-sm
               font-medium
@@ -91,7 +96,7 @@ export function FrammerModal() {
             </label>
 
             <label
-              htmlFor="image"
+              htmlFor="farmer-image"
               className="
               mt-2
               flex
@@ -154,7 +159,7 @@ export function FrammerModal() {
             </label>
 
             <input
-              id="image"
+              id="farmer-image"
               type="file"
               accept="image/*"
               onChange={handleImage}
@@ -165,7 +170,20 @@ export function FrammerModal() {
           {/* Descrição */}
 
           <div>
+            <label htmlFor="culture" className="text-sm font-medium">Cultura</label>
+
+            <input
+              value={culture}
+              onChange={(e) => setCulture(e.target.value)}
+              id="culture"
+              placeholder="Ex: Café arábica"
+              className="mt-2 w-full h-10 border rounded-xl px-3 text-sm outline-none focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+          <div>
             <label
+              htmlFor="farmer-description"
               className="
               text-sm
               font-medium
@@ -177,6 +195,7 @@ export function FrammerModal() {
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              id="farmer-description"
               placeholder="Ex: folhas com manchas amarelas"
               className="
               mt-2
@@ -199,12 +218,15 @@ export function FrammerModal() {
 
           <Button
             onClick={handleAnalyze}
+            disabled={!image || !culture.trim() || !description.trim()}
             className="
             w-full
             py-6
             bg-green-500
             hover:bg-green-600
             cursor-pointer
+            disabled:cursor-not-allowed
+            disabled:opacity-50
             "
           >
             Analisar cultura

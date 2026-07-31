@@ -18,7 +18,7 @@ export function BuyerModal() {
   const [productName, setProductName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
+  const [objective, setObjective] = useState("");
 
   function handleImage(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -29,6 +29,8 @@ export function BuyerModal() {
   }
 
   function handleAnalyze() {
+    if (!image || !productName.trim() || !quantity.trim() || !location.trim() || !objective.trim()) return;
+
     navigate("/diagnostico", {
       state: {
         type: "buyer",
@@ -36,7 +38,7 @@ export function BuyerModal() {
         productName,
         quantity,
         location,
-        description,
+        objective,
       },
     });
   }
@@ -77,7 +79,7 @@ export function BuyerModal() {
           {/* Upload imagem */}
 
           <div>
-            <label className="text-sm font-medium">Imagem do produto</label>
+            <label htmlFor="product-image" className="text-sm font-medium">Imagem do produto</label>
 
             <label
               htmlFor="product-image"
@@ -160,11 +162,12 @@ export function BuyerModal() {
           {/* Produto */}
 
           <div>
-            <label className="text-sm font-medium">Produto desejado</label>
+            <label htmlFor="product-name" className="text-sm font-medium">Produto desejado</label>
 
             <input
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
+              id="product-name"
               placeholder="Ex: Café Arábica"
               className="
               mt-1
@@ -191,11 +194,12 @@ export function BuyerModal() {
             "
           >
             <div>
-              <label className="text-sm font-medium">Quantidade</label>
+              <label htmlFor="product-quantity" className="text-sm font-medium">Quantidade</label>
 
               <input
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
+                id="product-quantity"
                 placeholder="50kg"
                 className="
                 mt-1
@@ -210,11 +214,12 @@ export function BuyerModal() {
             </div>
 
             <div>
-              <label className="text-sm font-medium">Local</label>
+              <label htmlFor="product-location" className="text-sm font-medium">Local</label>
 
               <input
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
+                id="product-location"
                 placeholder="Luanda"
                 className="
                 mt-1
@@ -232,13 +237,14 @@ export function BuyerModal() {
           {/* Descrição */}
 
           <div>
-            <label className="text-sm font-medium">
-              O que deseja analisar?
+            <label htmlFor="purchase-objective" className="text-sm font-medium">
+              Objetivo da compra
             </label>
 
             <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={objective}
+              onChange={(e) => setObjective(e.target.value)}
+              id="purchase-objective"
               placeholder="Ex: Quero comprar café de boa qualidade"
               className="
               mt-1
@@ -257,12 +263,15 @@ export function BuyerModal() {
 
           <Button
             onClick={handleAnalyze}
+            disabled={!image || !productName.trim() || !quantity.trim() || !location.trim() || !objective.trim()}
             className="
             w-full
             py-5
             bg-green-500
             hover:bg-green-600
             cursor-pointer
+            disabled:cursor-not-allowed
+            disabled:opacity-50
             "
           >
             Analisar produto
