@@ -4,7 +4,7 @@ if (!baseUrl) {
   throw new Error("VITE_API_BASE_URL não foi configurada.");
 }
 
-type AnalysisType = "farmer" | "buyer";
+export type AnalysisType = "farmer" | "buyer" | "soil";
 
 export type FarmerAnalysisInput = {
   culture: string;
@@ -20,11 +20,17 @@ export type BuyerAnalysisInput = {
   image: File;
 };
 
+export type SoilAnalysisInput = {
+  description?: string;
+  image: File;
+};
+
 export type AnalysisResponse = {
   success: boolean;
   data?: unknown;
   result?: unknown;
   error?: string;
+  analysis?: string;
 };
 
 export type ChatMessage = {
@@ -95,4 +101,12 @@ export async function continueAnalysisConversation(
   }
 
   return payload;
+}
+
+export function analyzeSoil(input: SoilAnalysisInput) {
+  return createAnalysis(
+    "soil",
+    { description: input.description || "" },
+    input.image,
+  );
 }

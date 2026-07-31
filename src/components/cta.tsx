@@ -1,5 +1,6 @@
 import { FrammerModal } from "./frammerModal";
 import { BuyerModal } from "./buyerModal";
+import { SoilModal } from "./soilModal";
 
 export function Cta() {
   return (
@@ -88,6 +89,9 @@ export function Cta() {
             </div>
             <div className="w-full sm:w-auto  ">
               <BuyerModal />
+            </div>
+            <div className="w-full sm:w-auto  ">
+              <SoilModal />
             </div>
           </div>
         </div>

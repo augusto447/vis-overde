@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import {
   analyzeBuyer,
   analyzeFarmer,
+  analyzeSoil,
   continueAnalysisConversation,
   type ChatMessage,
 } from "@/lib/api";
 
 type DiagnosticState = {
-  type: "farmer" | "buyer";
+  type: "farmer" | "buyer" | "soil";
   image: File;
   culture?: string;
   description?: string;
@@ -23,15 +24,15 @@ type DiagnosticState = {
 function cleanMarkdown(text: string): string {
   return text
     .replace(/```(?:markdown|md|text)?\s*/gi, "")
-    .replace(/```/g, "")
+    .replaceAll("```", "")
     .replace(/^\s{0,3}#{1,6}\s*/gm, "")
     .replace(/\*\*(.*?)\*\*/gs, "$1")
     .replace(/__(.*?)__/gs, "$1")
     .replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g, "$1")
     .replace(/(?<!_)_([^_\n]+)_(?!_)/g, "$1")
-    .replace(/^\s*[-*+]\s+/gm, "• ")
+    .replace(/^ {0,3}[-+][ \t]+/gm, "• ")
+    .replace(/^ {0,3}\*[ \t]+/gm, "• ")
     .replace(/`([^`]+)`/g, "$1")
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
 }
@@ -71,26 +72,41 @@ export function DiagnosticChat() {
 
     async function runAnalysis() {
       try {
-        const response = currentState.type === "farmer"
-          ? await analyzeFarmer({
-              culture: currentState.culture || "",
-              description: currentState.description || "",
-              image: currentState.image,
-            })
-          : await analyzeBuyer({
-              product: currentState.productName || "",
-              quantity: currentState.quantity || "",
-              location: currentState.location || "",
-              objective: currentState.objective || "",
-              image: currentState.image,
-            });
+        let response;
+
+        if (currentState.type === "farmer") {
+          response = await analyzeFarmer({
+            culture: currentState.culture || "",
+            description: currentState.description || "",
+            image: currentState.image,
+          });
+        } else if (currentState.type === "buyer") {
+          response = await analyzeBuyer({
+            product: currentState.productName || "",
+            quantity: currentState.quantity || "",
+            location: currentState.location || "",
+            objective: currentState.objective || "",
+            image: currentState.image,
+          });
+        } else {
+          response = await analyzeSoil({
+            description: currentState.description,
+            image: currentState.image,
+          });
+        }
 
         if (!active) return;
 
-        const analysisResult = response.result ?? response.data;
-        const initialUserMessage = currentState.type === "farmer"
-          ? `${currentState.culture}: ${currentState.description}`
-          : `${currentState.productName}, ${currentState.quantity}, entrega em ${currentState.location}. ${currentState.objective}`;
+        const analysisResult = response.analysis ?? response.result ?? response.data;
+        let initialUserMessage;
+
+        if (currentState.type === "farmer") {
+          initialUserMessage = `${currentState.culture}: ${currentState.description}`;
+        } else if (currentState.type === "buyer") {
+          initialUserMessage = `${currentState.productName}, ${currentState.quantity}, entrega em ${currentState.location}. ${currentState.objective}`;
+        } else {
+          initialUserMessage = currentState.description || "Enviei uma imagem do solo para análise.";
+        }
 
         setResult(analysisResult);
         setMessages([
