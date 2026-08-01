@@ -7,7 +7,6 @@ import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { HowItWorks } from "@/components/howItWorks";
 import { Impact } from "@/components/impact";
-import { Testimonials } from "@/components/tesmonials";
 
 export function Home() {
   return (
@@ -21,7 +20,7 @@ export function Home() {
         <HowItWorks />
         <Benefits />
         <Impact />
-        <Testimonials />
+
         <Cta />
         <Footer />
       </main>
